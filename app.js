@@ -23,18 +23,30 @@ app.use(express.static(path.join(__dirname + '/public')));
 
 // setting static file to send to client web browser
 
-var user = {};
+var users = {};
 // the user array (who still connected)
 
 io.on('connection', function(socket) {
   console.log('user connected: ', socket.id);
-  user[socket.id] = new UserObject(socket.id); //make userobject who newly connect
+  users[socket.id] = new UserObject(socket.id); //make userobject who newly connect
 
   io.to(socket.id).emit('get_initial_game_settings', GAME_SETTINGS); // give client to initial game settings for canvas drawing
 
   socket.on('disconnect', function() {
-    delete user[socket.id];
+    delete users[socket.id];
     console.log('user disconnect', socket.id);
   });
-
 });
+
+var update = setInterval(function () {
+  var idArray = [];
+  var statusArray = {};
+
+  for(var id in io.sockets.clients().connected) {
+    idArray.push(id);
+    statusArray[id] = users[id].status;
+  }
+
+  io.emit('update',idArray, statusArray);
+
+},10);

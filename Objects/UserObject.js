@@ -5,13 +5,14 @@ function UserObject(id){
     color+=(Math.floor(Math.random()*16)).toString(16);
   }
   this.name = null;
-  this.color = color;
+
   this.id = null;
 
   this.status = {};
   this.status.x = 0;
   this.status.y = 0;
   this.status.radius = 10 * Math.PI;
+  this.status.color = color;
 
   this.keypress = [];
 }
