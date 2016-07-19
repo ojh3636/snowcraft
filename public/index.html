@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title> Snow craft </title>
+  </head>
+
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+      $(function() {
+        var GAME_SETTINGS = null;
+
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        $(canvas).css("display","block");
+        $(canvas).css("border","black 1px solid");
+        $(canvas).css("margin","0 auto");   // Canvas 에 기본적인 css 스타일 먹여놓기
+
+        var socket = io(); // socket connect!! id createElement
+
+        socket.on('get_initial_game_settings', function(SERVER_GAME_SETTINGS) {
+          GAME_SETTINGS = SERVER_GAME_SETTINGS;
+          $(canvas).attr("width",GAME_SETTINGS.WIDTH);
+          $(canvas).attr("height",GAME_SETTINGS.HEIGH);
+          document.body.appendChild(canvas);
+          drawBackground();
+
+        });
+
+        function drawBackground() {
+          ctx.fillStyle = GAME_SETTINGS.BACKGROUND_COLOR;
+          ctx.fillRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
+        }
+
+
+
+
+      })
+
+
+    </script>
+
+
+</html>
