@@ -1,4 +1,3 @@
-
 var express = require("express");
 var app = express();
 var http = require("http").Server(app);
@@ -39,12 +38,21 @@ io.on('connection', function(socket) {
     console.log('user disconnect', socket.id);
   });
 
+  socket.on('keydown', function(keyCode){
+    users[socket.id].key[keyCode]=true;
+  });
+  socket.on('keyup', function(keyCode){
+    users[socket.id].key[keyCode]=false;
+  });
+
+
   socket.on('spacePress', function(vecX,vecY){
 
     var bullet = new BulletObject(socket.id, users[socket.id].status.x, users[socket.id].status.y, vecX, vecY);
 
     //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
     bulletArray.push(bullet);
+
   });
 
 });
@@ -53,17 +61,11 @@ var update = setInterval(function () {
   var idArray = [];
   var userStatusArray = {};
 
-  socket.on('keydown', function(keyCode){
-    users[socket.id].key[keyCode]=true;
-  });
-  socket.on('keyup', function(keyCode){
-    users[socket.id].key[keyCode]=false;
-  });
-  
+
   for(var id in io.sockets.clients().connected) {
     var idArray = [];
     var statusArray = {};
-     
+
     if(users[id].key && users[id].key[LEFT]) {
       users[id].status.x -= 2;
     }
