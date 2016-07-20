@@ -4,14 +4,13 @@ function UserObject(id){
   for(var i=1;i<=6;i++){
     color+=(Math.floor(Math.random()*16)).toString(16);
   }
-  this.name = null;
-
-  this.id = null;
 
   this.status = {};
-  this.status.x = 0;
-  this.status.y = 0;
-  this.status.radius = 10 * Math.PI;
+  this.status.name = null;
+  this.status.id = null;
+  this.status.x = Math.floor(Math.random() * 560) + 20;
+  this.status.y = Math.floor(Math.random() * 560) + 20;
+  this.status.radius = 5;
   this.status.color = color;
 
   this.keypress = [];

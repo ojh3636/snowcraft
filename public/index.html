@@ -6,13 +6,18 @@
     <title> Snow craft </title>
   </head>
 
-  <body>
+  <body oncontextmenu="return false">
     <script src="/socket.io/socket.io.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script>
 
       $(function() {
         var GAME_SETTINGS = null;
+        var currentMousePos = {x:-1,y:-1};
+        var user = {x:0,y:0};
+        //user status 필요한것 전역변수로 tracking할 수 있음.
+
+
 
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
@@ -36,16 +41,57 @@
           ctx.fillRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
         }
 
-        socket.on('update',function(idArray, statusArray) {
+        $('body').mousemove(function (event) {
+          currentMousePos.x = event.pageX - $(canvas).offset().left - user.x;
+          currentMousePos.y = event.pageY - $(canvas).offset().top - user.y;
+
+        });
+
+        socket.on('update',function(idArray, userStatusArray, bulletArray) {
+          if(GAME_SETTINGS == null) return;
+
           ctx.clearRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
+          //console.log("socket.id : ", socket.id);
+          //console.log(typeof socket.id);
+
+          user.x = userStatusArray["/#" + socket.id].x;
+          user.y = userStatusArray["/#" + socket.id].y;
 
           idArray.forEach(function(id,i,a) {
-            ctx.fillStyle = statusArray[id].color;
-            ctx.fillRect(statusArray[id].x,statusArray[id].y,10,10);
+            ctx.fillStyle = userStatusArray[id].color;
+            ctx.fillRect(userStatusArray[id].x,userStatusArray[id].y,30,30);
+
+
+            ctx.beginPath();
+            ctx.arc(userStatusArray[id].x,userStatusArray[id].y,userStatusArray[id].radius*Math.PI,0,2*Math.PI,true);
+            console.log(userStatusArray[id].radius);
+            ctx.closePath();
+            ctx.fill();
+
           })
+
+          ctx.fillStyle = "#00FF00";
+
+          for(var i=0;i<bulletArray.length;i++) {
+
+            //ctx.fillRect(Math.round( bulletArray[i].status.x ),Math.round(bulletArray[i].status.y),10,10);
+            ctx.beginPath();
+            ctx.arc(Math.round( bulletArray[i].status.x ), Math.round( bulletArray[i].status.y) ,2*Math.PI,0,2*Math.PI,true);
+            ctx.closePath();
+            ctx.fill();
+          }
 
         })
 
+        $('body').on('keydown',function(event) {
+
+          if(event.keyCode == 32){
+            event.preventDefault();
+            var square = Math.sqrt(currentMousePos.x*currentMousePos.x + currentMousePos.y*currentMousePos.y);
+            socket.emit('spacePress',(5*currentMousePos.x)/square, (5*currentMousePos.y)/square);
+
+          }
+        });
 
 
 
