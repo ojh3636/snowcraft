@@ -150,10 +150,17 @@
               ctx.font = "15px Arial";
               ctx.fillText(userStatusArray[id].name,userStatusArray[id].x-5*userStatusArray[id].name.length,userStatusArray[id].y - 45);
 
-            //  ctx.fillStyle = "red";
-            //  for(var j=0;j<userStatusArray[id].status.hp;j++){
 
-            //  }
+              var x = userStatusArray[id].x - userStatusArray[id].radius;
+              var y = userStatusArray[id].y + 50;
+              var offset = (userStatusArray[id].radius)/4;
+
+              for(var j=0;j<userStatusArray[id].hp;j++){
+                //console.log();
+                ctx.fillStyle = "red";
+                ctx.fillRect(x + offset*j,y,5,5);
+
+              }
             }
 
           })
