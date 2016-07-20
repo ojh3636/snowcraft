@@ -38,6 +38,7 @@ io.on('connection', function(socket) {
     delete users[socket.id];
     console.log('user disconnect', socket.id);
   });
+<<<<<<< HEAD
 
   socket.on('spacePress', function(vecX,vecY){
 
@@ -53,13 +54,19 @@ var update = setInterval(function () {
   var idArray = [];
   var userStatusArray = {};
 
+=======
   socket.on('keydown', function(keyCode){
     users[socket.id].key[keyCode]=true;
   });
   socket.on('keyup', function(keyCode){
     users[socket.id].key[keyCode]=false;
   });
+});
+
+var update = setInterval(function () {
   
+  
+>>>>>>> fa3ae9af1588a9de37bf251a496b7e57d2f4bf17
   for(var id in io.sockets.clients().connected) {
     var idArray = [];
     var statusArray = {};

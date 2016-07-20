@@ -13,10 +13,17 @@
 
       $(function() {
         var GAME_SETTINGS = null;
+<<<<<<< HEAD
         var currentMousePos = {x:-1,y:-1};
         var user = {x:0,y:0};
         //user status 필요한것 전역변수로 tracking할 수 있음.
 
+
+
+=======
+        var currentMousePos = {x:-1, y: -1};
+        var user = {x:0, y:0};
+>>>>>>> fa3ae9af1588a9de37bf251a496b7e57d2f4bf17
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         $(canvas).css("display","block");
@@ -48,6 +55,7 @@
           ctx.fillRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
         }
 
+<<<<<<< HEAD
         $('body').mousemove(function (event) {
           currentMousePos.x = event.pageX - $(canvas).offset().left - user.x;
           currentMousePos.y = event.pageY - $(canvas).offset().top - user.y;
@@ -63,8 +71,15 @@
 
           user.x = userStatusArray["/#" + socket.id].x;
           user.y = userStatusArray["/#" + socket.id].y;
+=======
+        socket.on('update',function(idArray, userStatusArray) {
+>>>>>>> fa3ae9af1588a9de37bf251a496b7e57d2f4bf17
 
+          ctx.clearRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
+          user.x = userStatusArray["/#"+socket.id].x;
+          user.y = userStatusArray["/#"+socket.id].y;
           idArray.forEach(function(id,i,a) {
+<<<<<<< HEAD
             ctx.fillStyle = userStatusArray[id].color;
             ctx.fillRect(userStatusArray[id].x,userStatusArray[id].y,30,30);
 
@@ -75,13 +90,15 @@
             ctx.closePath();
             ctx.fill();
 
-            //var t = Math.atan(currentMousePos.y/currentMousePos.x);
-            //ctx.save();
-            //ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
-            //ctx.rotate(t);
-            //ctx.fillStyle = userStatusArray[id].color;
-            //ctx.fillRect(-15,-15,30,30);
-            //ctx.restore();
+=======
+            var t = Math.atan(currentMousePos.y/currentMousePos.x);
+            ctx.save();
+            ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
+            ctx.rotate(t);
+            ctx.fillStyle = userStatusArray[id].color;
+            ctx.fillRect(-15,-15,30,30);
+            ctx.restore();
+>>>>>>> fa3ae9af1588a9de37bf251a496b7e57d2f4bf17
           })
 
           ctx.fillStyle = "#00FF00";
