@@ -63,8 +63,6 @@ var update = setInterval(function () {
 
 
   for(var id in io.sockets.clients().connected) {
-    var idArray = [];
-    var statusArray = {};
 
     if(users[id].key && users[id].key[LEFT]) {
       users[id].status.x -= 2;
