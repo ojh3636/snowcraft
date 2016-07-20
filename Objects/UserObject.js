@@ -9,12 +9,13 @@ function UserObject(id){
   this.id = null;
 
   this.status = {};
-  this.status.x = 0;
-  this.status.y = 0;
-  this.status.radius = 10 * Math.PI;
+  this.status.x = 300;
+  this.status.y = 300;
+
+  this.status.radius = 0;
   this.status.color = color;
 
-  this.keypress = [];
+  this.key = [];
 }
 
 module.exports = UserObject;
