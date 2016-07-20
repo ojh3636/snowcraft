@@ -10,10 +10,10 @@ function UserObject(id){
   this.status.id = null;
   this.status.x = Math.floor(Math.random() * 560) + 20;
   this.status.y = Math.floor(Math.random() * 560) + 20;
-  this.status.radius = 5;
+  this.status.radius = 24;
   this.status.color = color;
   this.status.currentMousePos = {};
-  
+  this.status.hp = 8;
   this.key = [];
 }
 

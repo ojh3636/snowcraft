@@ -65,31 +65,31 @@ var update = setInterval(function () {
 
   for(var id in io.sockets.clients().connected) {
 
-    if(users[id].key && users[id].key[LEFT]) {
+    if(users[id].key && users[id].key[LEFT] && users[id].status.hp !==0) {
       users[id].status.x -= 2;
     }
-    else if(users[id].key && users[id].key[A]) {
+    else if(users[id].key && users[id].key[A] && users[id].status.hp !==0) {
       users[id].status.x -= 2;
     }
-    if(users[id].key && users[id].key[UP]) {
+    if(users[id].key && users[id].key[UP] && users[id].status.hp !==0) {
       users[id].status.y -= 2;
     }
-    else if(users[id].key && users[id].key[W]) {
+    else if(users[id].key && users[id].key[W] && users[id].status.hp !==0) {
       users[id].status.y -= 2;
     }
-    if(users[id].key && users[id].key[RIGHT]) {
+    if(users[id].key && users[id].key[RIGHT] && users[id].status.hp !==0) {
       users[id].status.x += 2;
     }
-    else if(users[id].key && users[id].key[D]) {
+    else if(users[id].key && users[id].key[D] && users[id].status.hp !==0) {
       users[id].status.x += 2;
     }
-    if(users[id].key && users[id].key[DOWN]) {
+    if(users[id].key && users[id].key[DOWN] && users[id].status.hp !==0) {
       users[id].status.y += 2;
     }
-    else if(users[id].key && users[id].key[S]) {
+    else if(users[id].key && users[id].key[S] && users[id].status.hp !==0) {
       users[id].status.y += 2;
     }
-    if(users[id].key && users[id].key[32]) {
+    if(users[id].key && users[id].key[32] && users[id].status.hp !==0) {
       if(Check === 10 || Check === -1){
         var square = Math.sqrt(Math.pow(users[id].status.currentMousePos.x,2) + Math.pow(users[id].status.currentMousePos.y,2));
         var vecX = (8*users[id].status.currentMousePos.x)/square;
@@ -112,8 +112,29 @@ var update = setInterval(function () {
     var v = bulletArray[i].status.vec;
     bulletArray[i].status.x +=v.x;
     bulletArray[i].status.y +=v.y;
-
+    if(bulletArray[i].status.x > 800 || bulletArray[i].status.y > 800 || bulletArray[i].status.x<0 || bulletArray[i].status.y<0){
+      bulletArray.splice(i,1);
+      i--;
+    }
   }
+
+  idArray.forEach(function(id,i,a) {
+    for(var j=0;j<bulletArray.length;j++) {
+      if(users[id].status.hp !==0){
+        var distance = Math.sqrt( Math.pow((users[id].status.x - bulletArray[j].status.x),2) + Math.pow((users[id].status.y - bulletArray[j].status.y),2) );
+
+        if(distance <= 32){
+          console.log("wow");
+          bulletArray.splice(j,1);
+          j--;
+          users[id].status.hp--;
+        }
+
+      }
+
+      //console.log(distance);
+    }
+  });
 
   //console.log(bylletArray[100].status.x);
 
@@ -121,4 +142,4 @@ var update = setInterval(function () {
 
   io.emit('update',idArray, userStatusArray, bulletArray);
 
-},20);
+},15);

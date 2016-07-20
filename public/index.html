@@ -15,16 +15,17 @@
         var GAME_SETTINGS = null;
         var currentMousePos = {x:-1,y:-1};
         var user = {x:0,y:0};
+
         //user status 필요한것 전역변수로 tracking할 수 있음.
 
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
+
         $(canvas).css("display","block");
         $(canvas).css("border","black 1px solid");
         $(canvas).css("margin","0 auto");   // Canvas 에 기본적인 css 스타일 먹여놓기
 
         var socket = io(); // socket connect!! id createElement
-
         $('body').on('keydown', function(e){
 
           if(e.keyCode == 32){
@@ -43,7 +44,7 @@
           socket.emit('keyup', e.keyCode);
         });
 
-        $('body').on('mouseup', function(e) {aw
+        $('body').on('mouseup', function(e) {
           socket.emit('keyup',32);
         });
 
@@ -74,52 +75,52 @@
 
         socket.on('update',function(idArray, userStatusArray, bulletArray) {
           if(GAME_SETTINGS == null) return;
-
+          var uid = "/#" + socket.id;
           ctx.clearRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
           //console.log("socket.id : ", socket.id);
           //console.log(typeof socket.id);
-
-          user.x = userStatusArray["/#" + socket.id].x;
-          user.y = userStatusArray["/#" + socket.id].y;
+          user.x = userStatusArray[uid].x;
+          user.y = userStatusArray[uid].y;
 
           idArray.forEach(function(id,i,a) {
-            ctx.fillStyle = userStatusArray[id].color;
+            if(userStatusArray[id].hp !==0) {
+              ctx.lineWidth = 5;
+              ctx.strokeStyle = 'blue';
 
+              ctx.fillStyle = userStatusArray[id].color;
+              ctx.beginPath();
+              ctx.arc(userStatusArray[id].x,userStatusArray[id].y,userStatusArray[id].radius,0,2*Math.PI,true);
+              ctx.closePath();
+              ctx.fill();
+              ctx.stroke();
 
+              var t = 0;
+              if (userStatusArray[id].currentMousePos.x < 0) t = Math.PI;
 
-            ctx.beginPath();
-            ctx.arc(userStatusArray[id].x,userStatusArray[id].y,userStatusArray[id].radius*Math.PI,0,2*Math.PI,true);
-            ctx.closePath();
-            ctx.fill();
+              t += Math.atan(userStatusArray[id].currentMousePos.y/userStatusArray[id].currentMousePos.x);
+              ctx.lineWidth = 5;
+              ctx.strokeStyle = 'blue';
+              ctx.save();
+              ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
+              ctx.rotate(t);
+              ctx.fillStyle = userStatusArray[id].color;
+              ctx.fillRect(0,-14,40,28);
+              ctx.restore();
+              ctx.stroke();
+            }
 
-            var t = 0;
-            if (userStatusArray[id].currentMousePos.x< 0) t = Math.PI;
-            t += Math.atan(userStatusArray[id].currentMousePos.y/userStatusArray[id].currentMousePos.x);
-            ctx.save();
-            ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
-            ctx.rotate(t);
-            ctx.fillStyle = userStatusArray[id].color;
-            ctx.fillRect(0,-8,30,16);
-            ctx.restore();
           })
 
           ctx.fillStyle = "#00FF00";
 
           for(var i=0;i<bulletArray.length;i++) {
-
             //ctx.fillRect(Math.round( bulletArray[i].status.x ),Math.round(bulletArray[i].status.y),10,10);
             ctx.beginPath();
-            ctx.arc(Math.round( bulletArray[i].status.x ), Math.round( bulletArray[i].status.y) ,2*Math.PI,0,2*Math.PI,true);
+            ctx.arc(Math.round( bulletArray[i].status.x ), Math.round( bulletArray[i].status.y) ,8,0,2*Math.PI,true);
             ctx.closePath();
             ctx.fill();
           }
-
         })
-
-
-
-
-
       })
 
 
