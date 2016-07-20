@@ -10,7 +10,7 @@ var port = process.env.PORT || 3000;
 var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40, W = 87, A = 65, S = 83, D = 68;
 
 var GAME_SETTINGS = {
-  WIDTH : 800, HEIGH : 800, BACKGROUND_COLOR : "#FFFFFF"
+  WIDTH : 1000, HEIGH : 900, BACKGROUND_COLOR : "#FFFFFF"
 };
 
 
@@ -41,20 +41,24 @@ io.on('connection', function(socket) {
 
   socket.on('keydown', function(keyCode, uid){
     uid = "/#" + uid;
-    users[uid].key[keyCode]=true;
+    if(users[uid]) users[uid].key[keyCode]=true;
     //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
 
   });
   socket.on('keyup', function(keyCode, uid){
     uid = "/#" + uid;
-    users[uid].key[keyCode]=false;
-    if(keyCode == 32) users[uid].status.Check = -1;
+    if(users[uid]) {
+      users[uid].key[keyCode]=false;
+      if(keyCode == 32) users[uid].status.Check = -1;
+    }
   });
 
   socket.on('mouseposition',function(x, y, uid){
+    if(users[uid]) {
+      users[uid].status.currentMousePos.x = x;
+      users[uid].status.currentMousePos.y = y;
+    }
 
-    users[uid].status.currentMousePos.x = x;
-    users[uid].status.currentMousePos.y = y;
   });
 
 });
@@ -68,34 +72,66 @@ var update = setInterval(function () {
   for(var id in io.sockets.clients().connected) {
 
     if(users[id].key && users[id].key[LEFT] && users[id].status.hp !==0) {
-      users[id].status.x -= 2;
+      if(users[id].status.acclerate.x>-7) {
+        users[id].status.acclerate.x--;
+      }
+
     }
     else if(users[id].key && users[id].key[A] && users[id].status.hp !==0) {
-      users[id].status.x -= 2;
+      if(users[id].status.acclerate.x>-7) {
+        users[id].status.acclerate.x-=0.5;
+      }
     }
     if(users[id].key && users[id].key[UP] && users[id].status.hp !==0) {
-      users[id].status.y -= 2;
+      if(users[id].status.acclerate.y>-7) {
+        users[id].status.acclerate.y-=0.5;
+      }
     }
     else if(users[id].key && users[id].key[W] && users[id].status.hp !==0) {
-      users[id].status.y -= 2;
+      if(users[id].status.acclerate.y>-7) {
+        users[id].status.acclerate.y-=0.5;
+      }
     }
     if(users[id].key && users[id].key[RIGHT] && users[id].status.hp !==0) {
-      users[id].status.x += 2;
+      if(users[id].status.acclerate.x<7) {
+        users[id].status.acclerate.x+=0.5;
+      }
     }
     else if(users[id].key && users[id].key[D] && users[id].status.hp !==0) {
-      users[id].status.x += 2;
+      if(users[id].status.acclerate.x<7) {
+        users[id].status.acclerate.x+=0.5;
+      }
     }
     if(users[id].key && users[id].key[DOWN] && users[id].status.hp !==0) {
-      users[id].status.y += 2;
+      if(users[id].status.acclerate.y<7) {
+        users[id].status.acclerate.y+=0.5;
+      }
     }
     else if(users[id].key && users[id].key[S] && users[id].status.hp !==0) {
-      users[id].status.y += 2;
+      if(users[id].status.acclerate.y<7) {
+        users[id].status.acclerate.y+=0.5;
+      }
     }
+    users[id].status.x += users[id].status.acclerate.x;
+    users[id].status.y += users[id].status.acclerate.y;
+
+    if(users[id].status.acclerate.x > 0){
+      users[id].status.acclerate.x-=0.2;
+    }else if(users[id].status.acclerate.x <0){
+      users[id].status.acclerate.x+=0.2;
+    }
+
+    if(users[id].status.acclerate.y > 0){
+      users[id].status.acclerate.y-=0.2;
+    }else if(users[id].status.acclerate.y <0){
+      users[id].status.acclerate.y+=0.2;
+    }
+
     if(users[id].key && users[id].key[32] && users[id].status.hp !==0) {
       if(users[id].status.Check === 10 || users[id].status.Check === -1){
         var square = Math.sqrt(Math.pow(users[id].status.currentMousePos.x,2) + Math.pow(users[id].status.currentMousePos.y,2));
-        var vecX = (8*users[id].status.currentMousePos.x)/square;
-        var vecY = (8*users[id].status.currentMousePos.y)/square;
+        var vecX = (13*users[id].status.currentMousePos.x)/square;
+        var vecY = (13*users[id].status.currentMousePos.y)/square;
         var dx = 35 * users[id].status.currentMousePos.x / square;
         var dy = 35 * users[id].status.currentMousePos.y / square;
         var bullet = new BulletObject(id, users[id].status.x+dx, users[id].status.y+dy, vecX, vecY);
@@ -143,4 +179,4 @@ var update = setInterval(function () {
 
   io.emit('update',idArray, userStatusArray, bulletArray);
 
-},30);
+},15);
