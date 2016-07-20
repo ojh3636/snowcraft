@@ -204,4 +204,4 @@ var update = setInterval(function () {
 
   io.emit('update',idArray, userStatusArray, bulletArray);
 
-},15);
+},20);
