@@ -150,7 +150,7 @@ var update = setInterval(function () {
     var v = bulletArray[i].status.vec;
     bulletArray[i].status.x +=v.x;
     bulletArray[i].status.y +=v.y;
-    if(bulletArray[i].status.x > 800 || bulletArray[i].status.y > 800 || bulletArray[i].status.x<0 || bulletArray[i].status.y<0){
+    if(bulletArray[i].status.x > GAME_SETTINGS.WIDTH || bulletArray[i].status.y > GAME_SETTINGS.HEIGH || bulletArray[i].status.x<0 || bulletArray[i].status.y<0){
       bulletArray.splice(i,1);
       i--;
     }
