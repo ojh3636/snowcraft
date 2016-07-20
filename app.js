@@ -100,7 +100,6 @@ var update = setInterval(function () {
         bulletArray.push(bullet);
         Check = 0;
       }
-
       Check++;
 
     }

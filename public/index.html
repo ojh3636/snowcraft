@@ -29,18 +29,25 @@
 
           if(e.keyCode == 32){
             e.preventDefault();
-            var square = Math.sqrt(currentMousePos.x*currentMousePos.x + currentMousePos.y*currentMousePos.y);
-            socket.emit('keydown',e.keyCode,(5*currentMousePos.x)/square, (5*currentMousePos.y)/square);
-          } else {
-            socket.emit('keydown', e.keyCode,0,0);
           }
 
+          socket.emit('keydown', e.keyCode);
+
         });
 
+        $('body').on('mousedown', function(e) {
+          socket.emit('keydown',32);
+        });
 
         $('body').on('keyup', function(e){
-          socket.emit('keyup', e.keyCode)
+          socket.emit('keyup', e.keyCode);
         });
+
+        $('body').on('mouseup', function(e) {aw
+          socket.emit('keyup',32);
+        });
+
+
         $('body').on('mousemove', function(e){
           currentMousePos.x = event.pageX - $(canvas).offset().left - user.x;
           currentMousePos.y = event.pageY - $(canvas).offset().top - user.y;
