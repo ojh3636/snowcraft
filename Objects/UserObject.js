@@ -12,6 +12,8 @@ function UserObject(id){
   this.status.y = Math.floor(Math.random() * 560) + 20;
   this.status.radius = 5;
   this.status.color = color;
+  this.status.currentMousePos = {};
+  
   this.key = [];
 }
 

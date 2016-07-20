@@ -45,7 +45,10 @@ io.on('connection', function(socket) {
     users[socket.id].key[keyCode]=false;
   });
 
-
+  socket.on('mouseposition',function(x,y){
+    users[socket.id].status.currentMousePos.x = x;
+    users[socket.id].status.currentMousePos.y = y;
+  })
   socket.on('spacePress', function(vecX,vecY){
 
     var bullet = new BulletObject(socket.id, users[socket.id].status.x, users[socket.id].status.y, vecX, vecY);

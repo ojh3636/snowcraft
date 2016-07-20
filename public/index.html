@@ -51,6 +51,7 @@
         $('body').mousemove(function (event) {
           currentMousePos.x = event.pageX - $(canvas).offset().left - user.x;
           currentMousePos.y = event.pageY - $(canvas).offset().top - user.y;
+          socket.emit('mouseposition',currentMousePos.x, currentMousePos.y);
 
         });
 
@@ -66,22 +67,23 @@
 
           idArray.forEach(function(id,i,a) {
             ctx.fillStyle = userStatusArray[id].color;
-            ctx.fillRect(userStatusArray[id].x,userStatusArray[id].y,30,30);
+            
 
 
             ctx.beginPath();
             ctx.arc(userStatusArray[id].x,userStatusArray[id].y,userStatusArray[id].radius*Math.PI,0,2*Math.PI,true);
-            console.log(userStatusArray[id].radius);
             ctx.closePath();
             ctx.fill();
 
-            //var t = Math.atan(currentMousePos.y/currentMousePos.x);
-            //ctx.save();
-            //ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
-            //ctx.rotate(t);
-            //ctx.fillStyle = userStatusArray[id].color;
-            //ctx.fillRect(-15,-15,30,30);
-            //ctx.restore();
+            var t = 0;
+            if (userStatusArray[id].currentMousePos.x< 0) t = Math.PI;
+            t += Math.atan(userStatusArray[id].currentMousePos.y/userStatusArray[id].currentMousePos.x);
+            ctx.save();
+            ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
+            ctx.rotate(t);
+            ctx.fillStyle = userStatusArray[id].color;
+            ctx.fillRect(0,-8,30,16);
+            ctx.restore();
           })
 
           ctx.fillStyle = "#00FF00";
