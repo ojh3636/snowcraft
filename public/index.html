@@ -109,14 +109,15 @@
           user.x = userStatusArray[uid].x;
           user.y = userStatusArray[uid].y;
 
+          modal_exist = userStatusArray[uid].modal_exist;
+          
           if(!modal_exist && userStatusArray[uid].hp === 0){
             modal = document.getElementById('id01');
             modal.style.display='block';
             modal_exist = true;
-
           }
 
-          modal_exist = userStatusArray[uid].modal_exist;
+
 
 
 
