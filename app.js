@@ -32,7 +32,7 @@ var bulletArray = [];
 io.on('connection', function(socket) {
   console.log('user connected: ', socket.id);
   users[socket.id] = new UserObject(socket.id); //make userobject who newly connect
-
+    
   io.to(socket.id).emit('get_initial_game_settings', GAME_SETTINGS); // give client to initial game settings for canvas drawing
 
   socket.on('disconnect', function() {
@@ -55,6 +55,11 @@ io.on('connection', function(socket) {
     users[socket.id].status.currentMousePos.y = y;
   });
 
+  })
+//    var t = Math.sqrt(Math.pow(users[socket.id].status.currentMousePos.x,2) + Math.pow(users[socket.id].status.currentMousePos.y,2));
+//    var dx = 35 * users[socket.id].status.currentMousePos.x / t;
+//    var dy = 35 * users[socket.id].status.currentMousePos.y / t;
+//    var bullet = new BulletObject(socket.id, users[socket.id].status.x+dx, users[socket.id].status.y+dy, vecX, vecY);
 
 
 
