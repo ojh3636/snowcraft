@@ -61,7 +61,9 @@ io.on('connection', function(socket) {
     }
 
   });
-
+  socket.on('modal_on',function(){
+    users[socket.id].status.modal_exist = true;
+  });
   socket.on('nick', function(a){
     users[socket.id].status.name=a;
     users[socket.id].status.hp = 8;

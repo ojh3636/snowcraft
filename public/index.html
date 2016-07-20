@@ -29,7 +29,6 @@
         var GAME_SETTINGS = null;
         var currentMousePos = {x:-1,y:-1};
         var user = {x:0,y:0};
-        var modal_exist = true;
 
         //user status 필요한것 전역변수로 tracking할 수 있음.
 
@@ -109,12 +108,12 @@
           user.x = userStatusArray[uid].x;
           user.y = userStatusArray[uid].y;
 
-          modal_exist = userStatusArray[uid].modal_exist;
-          
-          if(!modal_exist && userStatusArray[uid].hp === 0){
+
+
+          if(!userStatusArray[uid].modal_exist && userStatusArray[uid].hp === 0){
             modal = document.getElementById('id01');
             modal.style.display='block';
-            modal_exist = true;
+            socket.emit('modal_on');
           }
 
 
