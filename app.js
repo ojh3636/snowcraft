@@ -40,19 +40,23 @@ io.on('connection', function(socket) {
     console.log('user disconnect', socket.id);
   });
 
-  socket.on('keydown', function(keyCode, vecX, vecY){
-    users[socket.id].key[keyCode]=true;
+  socket.on('keydown', function(keyCode, uid){
+    uid = "/#" + uid;
+    console.log(uid);
+    users[uid].key[keyCode]=true;
     //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
 
   });
-  socket.on('keyup', function(keyCode){
-    users[socket.id].key[keyCode]=false;
+  socket.on('keyup', function(keyCode, uid){
+    uid = "/#" + uid;
+    users[uid].key[keyCode]=false;
     if(keyCode == 32) Check = -1;
   });
 
-  socket.on('mouseposition',function(x,y){
-    users[socket.id].status.currentMousePos.x = x;
-    users[socket.id].status.currentMousePos.y = y;
+  socket.on('mouseposition',function(x, y, uid){
+    
+    users[uid].status.currentMousePos.x = x;
+    users[uid].status.currentMousePos.y = y;
   });
 
 });
