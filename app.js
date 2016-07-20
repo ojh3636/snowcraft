@@ -13,6 +13,8 @@ var GAME_SETTINGS = {
   WIDTH : 800, HEIGH : 800, BACKGROUND_COLOR : "#FFFFFF"
 };
 
+var Check = -1;
+
 
 http.listen(port, function() {
   console.log("server on!");
@@ -38,25 +40,23 @@ io.on('connection', function(socket) {
     console.log('user disconnect', socket.id);
   });
 
-  socket.on('keydown', function(keyCode){
+  socket.on('keydown', function(keyCode, vecX, vecY){
     users[socket.id].key[keyCode]=true;
+    //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
+
   });
   socket.on('keyup', function(keyCode){
     users[socket.id].key[keyCode]=false;
+    if(keyCode == 32) Check = -1;
   });
 
   socket.on('mouseposition',function(x,y){
     users[socket.id].status.currentMousePos.x = x;
     users[socket.id].status.currentMousePos.y = y;
-  })
-  socket.on('spacePress', function(vecX,vecY){
-
-    var bullet = new BulletObject(socket.id, users[socket.id].status.x, users[socket.id].status.y, vecX, vecY);
-
-    //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
-    bulletArray.push(bullet);
-
   });
+
+
+
 
 });
 
@@ -91,6 +91,20 @@ var update = setInterval(function () {
     else if(users[id].key && users[id].key[S]) {
       users[id].status.y += 2;
     }
+    if(users[id].key && users[id].key[32]) {
+      if(Check === 10 || Check === -1){
+        var square = Math.sqrt(users[id].status.currentMousePos.x * users[id].status.currentMousePos.x + users[id].status.currentMousePos.y * users[id].status.currentMousePos.y);
+        var vecX = (8*users[id].status.currentMousePos.x)/square;
+        var vecY = (8*users[id].status.currentMousePos.y)/square;
+        var bullet = new BulletObject(id, users[id].status.x, users[id].status.y, vecX, vecY);
+        bulletArray.push(bullet);
+        Check = 0;
+      }
+
+      Check++;
+
+    }
+
     idArray.push(id);
     userStatusArray[id] = users[id].status;
   }

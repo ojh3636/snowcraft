@@ -26,8 +26,18 @@
         var socket = io(); // socket connect!! id createElement
 
         $('body').on('keydown', function(e){
-          socket.emit('keydown', e.keyCode)
+
+          if(e.keyCode == 32){
+            e.preventDefault();
+            var square = Math.sqrt(currentMousePos.x*currentMousePos.x + currentMousePos.y*currentMousePos.y);
+            socket.emit('keydown',e.keyCode,(5*currentMousePos.x)/square, (5*currentMousePos.y)/square);
+          } else {
+            socket.emit('keydown', e.keyCode,0,0);
+          }
+
         });
+
+
         $('body').on('keyup', function(e){
           socket.emit('keyup', e.keyCode)
         });
@@ -67,7 +77,7 @@
 
           idArray.forEach(function(id,i,a) {
             ctx.fillStyle = userStatusArray[id].color;
-            
+
 
 
             ctx.beginPath();
@@ -99,15 +109,7 @@
 
         })
 
-        $('body').on('keydown',function(event) {
 
-          if(event.keyCode == 32){
-            event.preventDefault();
-            var square = Math.sqrt(currentMousePos.x*currentMousePos.x + currentMousePos.y*currentMousePos.y);
-            socket.emit('spacePress',(5*currentMousePos.x)/square, (5*currentMousePos.y)/square);
-
-          }
-        });
 
 
 
