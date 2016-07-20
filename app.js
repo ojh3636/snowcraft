@@ -73,7 +73,7 @@ var update = setInterval(function () {
 
     if(users[id].key && users[id].key[LEFT] && users[id].status.hp !==0) {
       if(users[id].status.acclerate.x>-7) {
-        users[id].status.acclerate.x--;
+        users[id].status.acclerate.x-=0.5;
       }
 
     }
@@ -115,16 +115,33 @@ var update = setInterval(function () {
     users[id].status.x += users[id].status.acclerate.x;
     users[id].status.y += users[id].status.acclerate.y;
 
-    if(users[id].status.acclerate.x > 0){
-      users[id].status.acclerate.x-=0.2;
-    }else if(users[id].status.acclerate.x <0){
-      users[id].status.acclerate.x+=0.2;
+    if(users[id].status.x >= GAME_SETTINGS.WIDTH - 24){
+      users[id].status.x = GAME_SETTINGS.WIDH -24;
+    } else if(users[id].status.x <= 24 ) {
+      users[id].status.x = 24;
     }
 
-    if(users[id].status.acclerate.y > 0){
+    if(users[id].status.y >= GAME_SETTINGS.HEIGH - 24){
+      users[id].status.y = GAME_SETTINGS.HEIGH -24;
+    } else if(users[id].status.y <= 24 ) {
+      users[id].status.y = 24;
+    }
+
+
+    if(users[id].status.acclerate.x >= 0.5){
+      users[id].status.acclerate.x-=0.2;
+    }else if(users[id].status.acclerate.x <=-0.5){
+      users[id].status.acclerate.x+=0.2;
+    }else{
+      users[id].status.acclerate.x = 0;
+    }
+
+    if(users[id].status.acclerate.y >= 0.5){
       users[id].status.acclerate.y-=0.2;
-    }else if(users[id].status.acclerate.y <0){
+    }else if(users[id].status.acclerate.y <=-0.5){
       users[id].status.acclerate.y+=0.2;
+    } else{
+      users[id].status.acclerate.y = 0;
     }
 
     if(users[id].key && users[id].key[32] && users[id].status.hp !==0) {
