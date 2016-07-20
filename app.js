@@ -30,7 +30,8 @@ var bulletArray = [];
 
 io.on('connection', function(socket) {
   console.log('user connected: ', socket.id);
-  users[socket.id] = new UserObject(socket.id); //make userobject who newly connect
+  users[socket.id] = new UserObject(socket.id);
+   //make userobject who newly connect
 
   io.to(socket.id).emit('get_initial_game_settings', GAME_SETTINGS); // give client to initial game settings for canvas drawing
 
@@ -59,6 +60,12 @@ io.on('connection', function(socket) {
       users[uid].status.currentMousePos.y = y;
     }
 
+  });
+
+  socket.on('nick', function(a){
+    users[socket.id].status.name=a;
+    users[socket.id].status.hp = 8;
+    users[socket.id].status.modal_exist = false;
   });
 
 });
@@ -117,7 +124,7 @@ var update = setInterval(function () {
 
     if(users[id].status.x >= GAME_SETTINGS.WIDTH - 24){
       users[id].status.x = GAME_SETTINGS.WIDTH -24;
-      
+
     } else if(users[id].status.x <= 24 ) {
       users[id].status.x = 24;
     }

@@ -3,18 +3,33 @@
   <head>
     <meta charset="utf-8"
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title> Snow craft </title>
+    <title>Mulit War Game</title>
+    <link rel="stylesheet" type="text/css" href="nick.css">
   </head>
 
   <body oncontextmenu="return false">
+
+    <div id="id01" class="modal">
+      <form class="modal-content animate">
+        <div class="container">
+          <label><b>Nickname</b></label>
+          <input type="text" placeholder="Enter Your Nickname" name="uname" id="myText" value = "">
+          <button type="button" id="nick_submit">Enter</button>
+        </div>
+      </form>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script>
 
       $(function() {
+        var a;
+        var modal;
         var GAME_SETTINGS = null;
         var currentMousePos = {x:-1,y:-1};
         var user = {x:0,y:0};
+        var user_modal_exsist = true;
 
         //user status 필요한것 전역변수로 tracking할 수 있음.
 
@@ -26,6 +41,21 @@
         $(canvas).css("margin","0 auto");   // Canvas 에 기본적인 css 스타일 먹여놓기
 
         var socket = io(); // socket connect!! id createElement
+
+        $(document).ready(function(){
+          modal = document.getElementById('id01');
+          modal.style.display='block';
+
+        });
+
+        $("#nick_submit").click(function(){
+             a = $("#myText").val();
+             socket.emit('nick', a);
+             modal = document.getElementById('id01');
+             modal.style.display="none";
+             user_modal_exsist = false;
+           });
+
         $('body').keydown(function(e){
 
           if(e.keyCode == 32){
@@ -72,17 +102,27 @@
 
         socket.on('update',function(idArray, userStatusArray, bulletArray) {
           if(GAME_SETTINGS == null) return;
+
           var uid = "/#" + socket.id;
           ctx.clearRect(0,0,GAME_SETTINGS.WIDTH,GAME_SETTINGS.HEIGH);
           //console.log("socket.id : ", socket.id);
           //console.log(typeof socket.id);
           user.x = userStatusArray[uid].x;
           user.y = userStatusArray[uid].y;
+          modal_exist = userStatusArray[uid].modal_exist;
+
+          if(!modal_exist && userStatusArray[uid].hp === 0){
+            modal = document.getElementById('id01');
+            modal.style.display='block';
+            modal_exist = true;
+
+          }
+
 
           idArray.forEach(function(id,i,a) {
             if(userStatusArray[id].hp !==0) {
               ctx.lineWidth = 5;
-              ctx.strokeStyle = 'black';
+              ctx.strokeStyle = 'gray';
 
               ctx.fillStyle = userStatusArray[id].color;
               ctx.beginPath();
@@ -96,7 +136,7 @@
 
               t += Math.atan(userStatusArray[id].currentMousePos.y/userStatusArray[id].currentMousePos.x);
               ctx.lineWidth = 5;
-              ctx.strokeStyle = 'black';
+              ctx.strokeStyle = 'gray';
               ctx.save();
               ctx.translate(userStatusArray[id].x, userStatusArray[id].y);
               ctx.rotate(t);
@@ -104,6 +144,14 @@
               ctx.fillRect(0,-14,40,28);
               ctx.restore();
               ctx.stroke();
+              ctx.fillStyle = "black";
+              ctx.font = "15px Arial";
+              ctx.fillText(userStatusArray[id].name,userStatusArray[id].x-5*userStatusArray[id].name.length,userStatusArray[id].y - 45);
+
+            //  ctx.fillStyle = "red";
+            //  for(var j=0;j<userStatusArray[id].status.hp;j++){
+
+            //  }
             }
 
           })

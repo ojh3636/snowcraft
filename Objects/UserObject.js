@@ -15,8 +15,9 @@ function UserObject(id){
   this.status.radius = 24;
   this.status.color = color;
   this.status.currentMousePos = {};
-  this.status.hp = 8;
+  this.status.hp = 0;
   this.status.Check = -1;
+  this.status.modal_exist = true;
 
   this.key = [];
 }
