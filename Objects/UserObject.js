@@ -14,6 +14,7 @@ function UserObject(id){
   this.status.color = color;
   this.status.currentMousePos = {};
   this.status.hp = 8;
+  this.status.Check = -1;
   this.key = [];
 }
 

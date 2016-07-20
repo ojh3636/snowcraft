@@ -13,7 +13,6 @@ var GAME_SETTINGS = {
   WIDTH : 800, HEIGH : 800, BACKGROUND_COLOR : "#FFFFFF"
 };
 
-var Check = -1;
 
 
 http.listen(port, function() {
@@ -42,7 +41,6 @@ io.on('connection', function(socket) {
 
   socket.on('keydown', function(keyCode, uid){
     uid = "/#" + uid;
-    console.log(uid);
     users[uid].key[keyCode]=true;
     //bullet.index = bulletArray.length(); index는 나중에 collision detection할떄 index를 같이 update를 하는걸로..지우는건 slice를 통해 없애기.
 
@@ -50,11 +48,11 @@ io.on('connection', function(socket) {
   socket.on('keyup', function(keyCode, uid){
     uid = "/#" + uid;
     users[uid].key[keyCode]=false;
-    if(keyCode == 32) Check = -1;
+    if(keyCode == 32) users[uid].status.Check = -1;
   });
 
   socket.on('mouseposition',function(x, y, uid){
-    
+
     users[uid].status.currentMousePos.x = x;
     users[uid].status.currentMousePos.y = y;
   });
@@ -94,7 +92,7 @@ var update = setInterval(function () {
       users[id].status.y += 2;
     }
     if(users[id].key && users[id].key[32] && users[id].status.hp !==0) {
-      if(Check === 10 || Check === -1){
+      if(users[id].status.Check === 10 || users[id].status.Check === -1){
         var square = Math.sqrt(Math.pow(users[id].status.currentMousePos.x,2) + Math.pow(users[id].status.currentMousePos.y,2));
         var vecX = (8*users[id].status.currentMousePos.x)/square;
         var vecY = (8*users[id].status.currentMousePos.y)/square;
@@ -102,9 +100,9 @@ var update = setInterval(function () {
         var dy = 35 * users[id].status.currentMousePos.y / square;
         var bullet = new BulletObject(id, users[id].status.x+dx, users[id].status.y+dy, vecX, vecY);
         bulletArray.push(bullet);
-        Check = 0;
+        users[id].status.Check = 0;
       }
-      Check++;
+      users[id].status.Check++;
 
     }
 
@@ -128,7 +126,6 @@ var update = setInterval(function () {
         var distance = Math.sqrt( Math.pow((users[id].status.x - bulletArray[j].status.x),2) + Math.pow((users[id].status.y - bulletArray[j].status.y),2) );
 
         if(distance <= 32){
-          console.log("wow");
           bulletArray.splice(j,1);
           j--;
           users[id].status.hp--;
@@ -146,4 +143,4 @@ var update = setInterval(function () {
 
   io.emit('update',idArray, userStatusArray, bulletArray);
 
-},15);
+},30);
