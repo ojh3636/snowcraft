@@ -189,9 +189,16 @@ var update = setInterval(function () {
         var distance = Math.sqrt( Math.pow((users[id].status.x - bulletArray[j].status.x),2) + Math.pow((users[id].status.y - bulletArray[j].status.y),2) );
 
         if(distance <= 32){
+
+          users[id].status.hp--;
+          if(users[id].status.hp ===0 ){
+            users[bulletArray[j].status.id].status.hp +=3;
+            users[bulletArray[j].status.id].status.score +=1;
+          }
+
           bulletArray.splice(j,1);
           j--;
-          users[id].status.hp--;
+
         }
 
       }

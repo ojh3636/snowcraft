@@ -18,6 +18,7 @@ function UserObject(id){
   this.status.hp = 0;
   this.status.Check = -1;
   this.status.modal_exist = true;
+  this.status.score = 0;
 
   this.key = [];
 }

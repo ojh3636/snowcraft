@@ -147,8 +147,12 @@
               ctx.restore();
               ctx.stroke();
               ctx.fillStyle = "black";
-              ctx.font = "15px Arial";
+              ctx.font = "20px Arial";
               ctx.fillText(userStatusArray[id].name,userStatusArray[id].x-5*userStatusArray[id].name.length,userStatusArray[id].y - 45);
+
+              ctx.fillStyle = "gray";
+              ctx.font = "13px Arial";
+              ctx.fillText(userStatusArray[id].score,userStatusArray[id].x-4,userStatusArray[id].y - 30)
 
 
               var x = userStatusArray[id].x - userStatusArray[id].radius;
