@@ -193,6 +193,7 @@ var update = setInterval(function () {
           users[id].status.hp--;
           if(users[id].status.hp ===0 ){
             users[bulletArray[j].status.id].status.hp +=3;
+            if(users[bulletArray[j].status.id].status.hp>8) users[bulletArray[j].status.id].status.hp=8;
             users[bulletArray[j].status.id].status.score +=1;
           }
 
