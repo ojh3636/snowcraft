@@ -41,11 +41,22 @@
 
         var socket = io(); // socket connect!! id createElement
 
+
         $(document).ready(function(){
           modal = document.getElementById('id01');
           modal.style.display='block';
 
         });
+
+        $(window).keydown(function(event){
+          if(event.keyCode == 13) {
+            event.preventDefault();
+            a = $("#myText").val();
+            socket.emit('nick', a);
+            modal = document.getElementById('id01');
+            modal.style.display="none";
+            return false;
+          }});
 
         $("#nick_submit").click(function(){
              a = $("#myText").val();
